@@ -1,0 +1,1100 @@
+```html
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kingom | Neon Süper Abone</title>
+
+<style>
+:root {
+  --gold: #ffd76a;
+  --blue: #00baff;
+  --neon: #00eaff;
+  --deep-blue: #006dff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent !important;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#scene {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: transparent;
+}
+
+#effects {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  pointer-events: none;
+}
+
+#flash {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0,234,255,.38),
+    rgba(0,100,255,.15) 42%,
+    transparent 75%
+  );
+}
+
+#flash.hit {
+  animation: flashHit .55s ease-out;
+}
+
+@keyframes flashHit {
+  0%, 100% { opacity: 0; }
+  12% { opacity: 1; }
+  28% { opacity: .12; }
+  42% { opacity: .8; }
+}
+
+#scene.shake {
+  animation: screenShake .55s ease-out;
+}
+
+@keyframes screenShake {
+  0%,100% { transform: translate(0,0); }
+  12% { transform: translate(-8px,3px) rotate(-.4deg); }
+  24% { transform: translate(8px,-4px) rotate(.4deg); }
+  36% { transform: translate(-6px,-2px); }
+  48% { transform: translate(5px,3px) rotate(.2deg); }
+  65% { transform: translate(-3px,1px); }
+  80% { transform: translate(2px,-1px); }
+}
+
+.alert {
+  width: min(790px, 96vw);
+  max-height: 100vh;
+  overflow: visible;
+  position: relative;
+  z-index: 3;
+  padding: 8px 22px 22px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(22px) scale(.88);
+  pointer-events: none;
+}
+
+.alert.show {
+  animation: reveal .75s cubic-bezier(.16,1,.3,1) forwards;
+}
+
+.alert.hide {
+  animation: disappear .55s ease forwards;
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(.82);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes disappear {
+  to {
+    opacity: 0;
+    transform: translateY(-16px) scale(.96);
+    filter: blur(5px);
+  }
+}
+
+/* NEON HALO */
+.neon-halo {
+  position: absolute;
+  width: min(550px, 85vw);
+  height: 200px;
+  left: 50%;
+  top: 70px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  border: 2px solid rgba(0,234,255,.32);
+  box-shadow:
+    0 0 12px rgba(0,234,255,.65),
+    inset 0 0 18px rgba(0,234,255,.16),
+    0 0 65px rgba(0,100,255,.3);
+  opacity: .8;
+  z-index: -1;
+  animation: haloPulse 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes haloPulse {
+  0%,100% {
+    opacity: .45;
+    transform: translateX(-50%) scale(.96);
+  }
+  50% {
+    opacity: .95;
+    transform: translateX(-50%) scale(1.04);
+  }
+}
+
+/* TACIN KENDİSİ: HARİCİ DOSYA GEREKTİRMEZ */
+.crown-wrap {
+  width: min(330px, 56vw);
+  height: min(230px, 39vw);
+  min-height: 140px;
+  margin: 0 auto -4px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: crownFloat 3.6s ease-in-out infinite;
+  filter:
+    drop-shadow(0 0 8px rgba(255,199,73,.8))
+    drop-shadow(0 0 19px rgba(0,220,255,.6))
+    drop-shadow(0 0 38px rgba(0,100,255,.35));
+}
+
+.crown-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+@keyframes crownFloat {
+  0%,100% { transform: translateY(0) rotate(-.5deg); }
+  50% { transform: translateY(-7px) rotate(.5deg); }
+}
+
+.crown-glint {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow:
+    0 0 7px #fff,
+    0 0 16px var(--neon),
+    0 0 25px var(--gold);
+  opacity: 0;
+  animation: glint 2.4s infinite;
+  pointer-events: none;
+}
+
+.glint1 { left: 22%; top: 40%; }
+.glint2 { left: 50%; top: 9%; animation-delay: .7s; }
+.glint3 { right: 22%; top: 40%; animation-delay: 1.4s; }
+
+@keyframes glint {
+  0%,72%,100% { opacity: 0; transform: scale(.3); }
+  82% { opacity: 1; transform: scale(1.8); }
+  92% { opacity: .25; transform: scale(.7); }
+}
+
+/* SÜPER ABONE ETİKETİ */
+.crown-label {
+  position: relative;
+  display: table;
+  margin: 0 auto 22px;
+  padding: 9px 24px;
+  color: #e9fcff;
+  font-size: clamp(13px, 2vw, 17px);
+  font-weight: 900;
+  letter-spacing: 4px;
+  background: linear-gradient(
+    180deg,
+    rgba(2,31,60,.96),
+    rgba(0,102,166,.96),
+    rgba(2,23,48,.98)
+  );
+  border: 1px solid var(--neon);
+  box-shadow:
+    0 0 8px rgba(0,234,255,.9),
+    0 0 24px rgba(0,153,255,.55),
+    inset 0 0 14px rgba(0,234,255,.25);
+  text-shadow:
+    0 0 8px var(--neon),
+    0 0 18px var(--blue);
+}
+
+/* PROFİL: ESKİ 116 PX, YENİ 232 PX */
+.profile-ring {
+  position: relative;
+  width: 232px;
+  height: 232px;
+  margin: 0 auto 20px;
+  padding: 6px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #ffffff,
+    #00eaff,
+    #006dff,
+    #fff0a1,
+    #ffd76a,
+    #00eaff,
+    #ffffff
+  );
+  box-shadow:
+    0 0 12px rgba(0,234,255,.95),
+    0 0 28px rgba(0,153,255,.8),
+    0 0 42px rgba(255,198,66,.3);
+  animation: avatarGlow 2.3s ease-in-out infinite;
+}
+
+@keyframes avatarGlow {
+  0%,100% {
+    box-shadow:
+      0 0 12px rgba(0,234,255,.75),
+      0 0 25px rgba(0,153,255,.55),
+      0 0 35px rgba(255,198,66,.2);
+  }
+  50% {
+    box-shadow:
+      0 0 20px rgba(0,234,255,1),
+      0 0 43px rgba(0,153,255,.9),
+      0 0 48px rgba(255,198,66,.4);
+  }
+}
+
+.profile-ring::before {
+  content: "";
+  position: absolute;
+  inset: -9px;
+  border: 2px solid rgba(0,234,255,.8);
+  border-left-color: transparent;
+  border-right-color: rgba(255,215,106,.8);
+  border-radius: 50%;
+  animation: ringSpin 5s linear infinite;
+}
+
+.profile-ring::after {
+  content: "";
+  position: absolute;
+  inset: -15px;
+  border: 1px solid rgba(0,234,255,.32);
+  border-radius: 50%;
+  box-shadow: 0 0 16px rgba(0,234,255,.35);
+  animation: ringSpin 10s linear infinite reverse;
+}
+
+@keyframes ringSpin {
+  to { transform: rotate(360deg); }
+}
+
+#avatar {
+  display: block;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #07182b;
+  border: 4px solid #07182b;
+}
+
+/* GERÇEK ABONE KULLANICI ADI */
+.username {
+  max-width: 100%;
+  margin: 0 auto 20px;
+  color: #fff4c3;
+  font-size: clamp(26px, 4.5vw, 45px);
+  font-weight: 900;
+  letter-spacing: 2px;
+  overflow-wrap: anywhere;
+  text-transform: uppercase;
+  text-shadow:
+    0 1px 0 #fff,
+    0 3px 0 #a87320,
+    0 5px 0 #553710,
+    0 8px 18px #000,
+    0 0 13px var(--gold),
+    0 0 24px rgba(0,234,255,.6);
+}
+
+/* MESAJ */
+.message {
+  padding: 17px 20px;
+  color: #f5fbff;
+  font-size: clamp(15px, 2.5vw, 24px);
+  line-height: 1.5;
+  font-weight: 900;
+  letter-spacing: 1px;
+  background: linear-gradient(
+    110deg,
+    rgba(3,10,24,.92),
+    rgba(0,38,70,.91),
+    rgba(3,10,24,.92)
+  );
+  border: 1px solid rgba(0,234,255,.85);
+  box-shadow:
+    0 0 10px rgba(0,234,255,.28),
+    0 0 26px rgba(0,100,255,.2),
+    inset 0 0 22px rgba(0,234,255,.1);
+  text-shadow: 0 2px 8px #000;
+}
+
+.highlight {
+  color: var(--gold);
+  text-shadow:
+    0 0 9px rgba(255,200,72,.8),
+    0 0 20px rgba(255,200,72,.4);
+}
+
+/* KONTROLLER */
+#status {
+  position: fixed;
+  bottom: 8px;
+  left: 10px;
+  color: rgba(255,255,255,.8);
+  font-size: 11px;
+  z-index: 20;
+  text-shadow: 0 0 5px #000;
+}
+
+#controls {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 30;
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 95%;
+}
+
+#controls input,
+#controls button {
+  color: white;
+  background: #071a30;
+  border: 1px solid var(--neon);
+  border-radius: 7px;
+  padding: 10px 12px;
+  font-size: 12px;
+  box-shadow: 0 0 10px rgba(0,234,255,.25);
+}
+
+#controls input { width: 170px; }
+#controls button { cursor: pointer; }
+
+#controls button:hover {
+  background: #06416a;
+  box-shadow: 0 0 15px rgba(0,234,255,.65);
+}
+
+body.live-mode #controls,
+body.live-mode #status {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .alert {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .crown-wrap {
+    width: min(290px, 64vw);
+    height: min(200px, 45vw);
+  }
+
+  .profile-ring {
+    width: 180px;
+    height: 180px;
+  }
+
+  .message {
+    padding: 13px 12px;
+    letter-spacing: .4px;
+  }
+}
+
+@media (max-height: 750px) {
+  .alert {
+    transform-origin: center center;
+    scale: .82;
+  }
+
+  .crown-wrap {
+    height: 165px;
+    min-height: 120px;
+  }
+
+  .profile-ring {
+    width: 170px;
+    height: 170px;
+    margin-bottom: 14px;
+  }
+
+  .username {
+    margin-bottom: 13px;
+  }
+
+  .crown-label {
+    margin-bottom: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crown-wrap,
+  .crown-glint,
+  .profile-ring::before,
+  .profile-ring::after,
+  .profile-ring,
+  .neon-halo {
+    animation: none;
+  }
+
+  #scene.shake {
+    animation: none;
+  }
+}
+</style>
+</head>
+
+<body>
+<div id="scene">
+  <canvas id="effects"></canvas>
+  <div id="flash"></div>
+
+  <main class="alert" id="alert">
+    <div class="neon-halo"></div>
+
+    <!-- HARİCİ DOSYA GEREKTİRMEYEN ALTIN TAÇ -->
+    <div class="crown-wrap">
+      <svg
+        class="crown-svg"
+        viewBox="0 0 360 250"
+        xmlns="http://www.w3.org/2000/svg"
+        role="img"
+        aria-label="Altın kral tacı"
+      >
+        <defs>
+          <linearGradient id="goldMetal" x1="0" y1="0" x2="0.8" y2="1">
+            <stop offset="0%" stop-color="#fff9cf"/>
+            <stop offset="15%" stop-color="#fff0a0"/>
+            <stop offset="32%" stop-color="#d99b28"/>
+            <stop offset="48%" stop-color="#fff0a0"/>
+            <stop offset="62%" stop-color="#a76510"/>
+            <stop offset="78%" stop-color="#ffe89a"/>
+            <stop offset="100%" stop-color="#9b5b0b"/>
+          </linearGradient>
+
+          <linearGradient id="goldFront" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fff7c5"/>
+            <stop offset="22%" stop-color="#e9b844"/>
+            <stop offset="45%" stop-color="#fff0a0"/>
+            <stop offset="70%" stop-color="#bc7b16"/>
+            <stop offset="100%" stop-color="#70400a"/>
+          </linearGradient>
+
+          <linearGradient id="goldBand" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fff7c2"/>
+            <stop offset="20%" stop-color="#dba33a"/>
+            <stop offset="45%" stop-color="#fff1a0"/>
+            <stop offset="75%" stop-color="#b77719"/>
+            <stop offset="100%" stop-color="#75430b"/>
+          </linearGradient>
+
+          <linearGradient id="blueGem" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="22%" stop-color="#80f4ff"/>
+            <stop offset="48%" stop-color="#00a9ff"/>
+            <stop offset="75%" stop-color="#0050d9"/>
+            <stop offset="100%" stop-color="#061d70"/>
+          </linearGradient>
+
+          <radialGradient id="rubyGem">
+            <stop offset="0%" stop-color="#fff3cc"/>
+            <stop offset="35%" stop-color="#ffdc62"/>
+            <stop offset="70%" stop-color="#d18412"/>
+            <stop offset="100%" stop-color="#603508"/>
+          </radialGradient>
+
+          <filter id="crownShadow" x="-40%" y="-40%" width="180%" height="190%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="5"/>
+            <feOffset dy="7"/>
+            <feComponentTransfer>
+              <feFuncA type="linear" slope=".6"/>
+            </feComponentTransfer>
+            <feMerge>
+              <feMergeNode/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+
+          <filter id="gemGlow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="4" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <g filter="url(#crownShadow)">
+          <!-- İç koyu metal silueti -->
+          <path
+            d="M48 157
+               L28 47
+               L100 103
+               L142 24
+               L180 91
+               L218 24
+               L260 103
+               L332 47
+               L312 157
+               Z"
+            fill="#75430b"
+            stroke="#fff0a0"
+            stroke-width="4"
+            stroke-linejoin="round"
+          />
+
+          <!-- Ana taç gövdesi -->
+          <path
+            d="M49 145
+               L34 55
+               L101 108
+               L142 34
+               L180 94
+               L218 34
+               L259 108
+               L326 55
+               L311 145
+               Z"
+            fill="url(#goldMetal)"
+            stroke="#fff1ad"
+            stroke-width="3"
+            stroke-linejoin="round"
+          />
+
+          <!-- Metal yüzey parlamaları -->
+          <path
+            d="M44 64 L98 116 L83 135 L49 144 Z"
+            fill="#fff6bd"
+            opacity=".72"
+          />
+          <path
+            d="M142 39 L174 96 L154 109 L126 61 Z"
+            fill="#fff7d2"
+            opacity=".75"
+          />
+          <path
+            d="M218 39 L206 108 L226 104 L244 64 Z"
+            fill="#fff4bd"
+            opacity=".7"
+          />
+          <path
+            d="M317 64 L263 116 L277 135 L310 144 Z"
+            fill="#fff2b0"
+            opacity=".6"
+          />
+
+          <!-- Altın taç bandı -->
+          <path
+            d="M49 139
+               Q180 166 311 139
+               L306 181
+               Q180 209 54 181 Z"
+            fill="url(#goldBand)"
+            stroke="#fff2ad"
+            stroke-width="3"
+          />
+
+          <!-- Bandın ince metal çizgileri -->
+          <path
+            d="M53 150 Q180 177 307 150"
+            fill="none"
+            stroke="#fffbdc"
+            stroke-width="3"
+            opacity=".9"
+          />
+          <path
+            d="M55 173 Q180 198 305 173"
+            fill="none"
+            stroke="#7c4b10"
+            stroke-width="3"
+            opacity=".8"
+          />
+
+          <!-- Mavi değerli taşlar -->
+          <g filter="url(#gemGlow)">
+            <path
+              d="M97 112 L108 101 L119 112 L108 130 Z"
+              fill="url(#blueGem)"
+              stroke="#e5ffff"
+              stroke-width="2"
+            />
+            <path
+              d="M141 77 L154 65 L167 77 L154 99 Z"
+              fill="url(#blueGem)"
+              stroke="#e5ffff"
+              stroke-width="2"
+            />
+            <path
+              d="M166 112 L180 96 L194 112 L180 137 Z"
+              fill="url(#blueGem)"
+              stroke="#e5ffff"
+              stroke-width="2.5"
+            />
+            <path
+              d="M193 77 L206 65 L219 77 L206 99 Z"
+              fill="url(#blueGem)"
+              stroke="#e5ffff"
+              stroke-width="2"
+            />
+            <path
+              d="M241 112 L252 101 L263 112 L252 130 Z"
+              fill="url(#blueGem)"
+              stroke="#e5ffff"
+              stroke-width="2"
+            />
+          </g>
+
+          <!-- Band üzerindeki mücevherler -->
+          <circle cx="86" cy="161" r="6" fill="url(#rubyGem)" stroke="#fff1a4" stroke-width="1.5"/>
+          <circle cx="117" cy="168" r="5" fill="url(#blueGem)" stroke="#d8ffff" stroke-width="1.5"/>
+          <circle cx="148" cy="173" r="5" fill="url(#rubyGem)" stroke="#fff1a4" stroke-width="1.5"/>
+          <circle cx="180" cy="175" r="7" fill="url(#blueGem)" stroke="#ffffff" stroke-width="2"/>
+          <circle cx="212" cy="173" r="5" fill="url(#rubyGem)" stroke="#fff1a4" stroke-width="1.5"/>
+          <circle cx="243" cy="168" r="5" fill="url(#blueGem)" stroke="#d8ffff" stroke-width="1.5"/>
+          <circle cx="274" cy="161" r="6" fill="url(#rubyGem)" stroke="#fff1a4" stroke-width="1.5"/>
+
+          <!-- Taç uçlarının parlak küreleri -->
+          <circle cx="34" cy="53" r="8" fill="url(#goldFront)" stroke="#fffbdc" stroke-width="2"/>
+          <circle cx="142" cy="31" r="8" fill="url(#goldFront)" stroke="#fffbdc" stroke-width="2"/>
+          <circle cx="218" cy="31" r="8" fill="url(#goldFront)" stroke="#fffbdc" stroke-width="2"/>
+          <circle cx="326" cy="53" r="8" fill="url(#goldFront)" stroke="#fffbdc" stroke-width="2"/>
+
+          <!-- Alt kenar metal parlaklığı -->
+          <path
+            d="M54 182 Q180 211 306 182"
+            fill="none"
+            stroke="#fff7cb"
+            stroke-width="4"
+            stroke-linecap="round"
+          />
+        </g>
+      </svg>
+
+      <span class="crown-glint glint1"></span>
+      <span class="crown-glint glint2"></span>
+      <span class="crown-glint glint3"></span>
+    </div>
+
+    <div class="crown-label">✦ SÜPER ABONE ✦</div>
+
+    <div class="profile-ring">
+      <img id="avatar" alt="Abone profil fotoğrafı"
+        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2307182b'/%3E%3Ctext x='50' y='65' text-anchor='middle' font-size='45' fill='%2300eaff'%3E%E2%98%85%3C/text%3E%3C/svg%3E">
+    </div>
+
+    <div class="username" id="username">ABONE ADI</div>
+
+    <div class="message">
+      <span class="highlight">KINGOM</span> ARTIK BİZİM<br>
+      MAHALLEDEN, BİZİMLE<br>
+      BATMAYA KARAR VERDİ!
+    </div>
+  </main>
+
+  <div id="status">TikFinity bağlantısı bekleniyor…</div>
+
+  <div id="controls">
+    <input id="testName" placeholder="Test kullanıcı adı" value="TestAbone">
+    <button id="testButton">Efekti dene</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const scene = document.getElementById("scene");
+  const alertBox = document.getElementById("alert");
+  const usernameEl = document.getElementById("username");
+  const avatarEl = document.getElementById("avatar");
+  const statusEl = document.getElementById("status");
+  const canvas = document.getElementById("effects");
+  const flash = document.getElementById("flash");
+  const ctx = canvas.getContext("2d");
+
+  let socket = null;
+  let reconnectTimer = null;
+  let hideTimer = null;
+  let shakeTimer = null;
+  let particles = [];
+  let bolts = [];
+  let lastTrigger = 0;
+
+  const fallbackAvatar =
+    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2307182b'/%3E%3Ctext x='50' y='65' text-anchor='middle' font-size='45' fill='%2300eaff'%3E%E2%98%85%3C/text%3E%3C/svg%3E";
+
+  function resizeCanvas() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    canvas.width = Math.round(innerWidth * dpr);
+    canvas.height = Math.round(innerHeight * dpr);
+    canvas.style.width = innerWidth + "px";
+    canvas.style.height = innerHeight + "px";
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  addEventListener("resize", resizeCanvas);
+  resizeCanvas();
+
+  function random(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  function makeBolt(x1, y1, x2, y2, depth = 0) {
+    const points = [{ x: x1, y: y1 }];
+    const distance = Math.hypot(x2 - x1, y2 - y1);
+    const count = Math.max(7, Math.floor(distance / 12));
+
+    for (let i = 1; i < count; i++) {
+      const t = i / count;
+
+      points.push({
+        x: x1 + (x2 - x1) * t + random(-20, 20),
+        y: y1 + (y2 - y1) * t + random(-17, 17)
+      });
+    }
+
+    points.push({ x: x2, y: y2 });
+
+    bolts.push({
+      points,
+      life: 1,
+      decay: random(.055, .09),
+      width: random(1.2, 2.8)
+    });
+
+    if (depth < 2 && Math.random() > .35) {
+      const p = points[Math.floor(random(2, points.length - 1))];
+
+      makeBolt(
+        p.x, p.y,
+        p.x + random(-85, 85),
+        p.y + random(-65, 85),
+        depth + 1
+      );
+    }
+  }
+
+  function impact() {
+    flash.classList.remove("hit");
+    void flash.offsetWidth;
+    flash.classList.add("hit");
+
+    scene.classList.remove("shake");
+    void scene.offsetWidth;
+    scene.classList.add("shake");
+
+    clearTimeout(shakeTimer);
+    shakeTimer = setTimeout(() => {
+      scene.classList.remove("shake");
+    }, 600);
+  }
+
+  function burst() {
+    const w = innerWidth;
+    const h = innerHeight;
+    const cx = w / 2;
+    const cy = h / 2;
+
+    makeBolt(w * .04, h * .13, cx - w * .10, cy);
+    makeBolt(w * .96, h * .13, cx + w * .10, cy);
+    makeBolt(w * .30, 0, cx - w * .08, cy - h * .08);
+    makeBolt(w * .70, 0, cx + w * .08, cy - h * .08);
+
+    for (let i = 0; i < 145; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const speed = random(1, 6.5);
+
+      particles.push({
+        x: cx + random(-30, 30),
+        y: cy + random(-25, 25),
+        vx: Math.cos(a) * speed,
+        vy: Math.sin(a) * speed,
+        life: 1,
+        decay: random(.014, .032),
+        size: random(.8, 3.3),
+        color: Math.random() > .42 ? "#00eaff" : "#ffd76a",
+        gravity: random(.005, .03)
+      });
+    }
+
+    impact();
+  }
+
+  function drawEffects() {
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+
+    bolts = bolts.filter(b => b.life > 0);
+
+    for (const b of bolts) {
+      ctx.save();
+      ctx.globalAlpha = b.life;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.beginPath();
+
+      b.points.forEach((p, i) => {
+        if (i) ctx.lineTo(p.x, p.y);
+        else ctx.moveTo(p.x, p.y);
+      });
+
+      ctx.strokeStyle = "#006dff";
+      ctx.lineWidth = b.width * 7;
+      ctx.shadowColor = "#0077ff";
+      ctx.shadowBlur = 25;
+      ctx.stroke();
+
+      ctx.strokeStyle = "#00d9ff";
+      ctx.lineWidth = b.width * 2.5;
+      ctx.shadowColor = "#00eaff";
+      ctx.shadowBlur = 17;
+      ctx.stroke();
+
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = Math.max(.7, b.width * .65);
+      ctx.shadowColor = "#ffffff";
+      ctx.shadowBlur = 9;
+      ctx.stroke();
+
+      ctx.restore();
+      b.life -= b.decay;
+    }
+
+    particles = particles.filter(p => p.life > 0);
+
+    for (const p of particles) {
+      ctx.save();
+      ctx.globalAlpha = Math.min(1, p.life * 1.4);
+      ctx.fillStyle = p.color;
+      ctx.shadowColor = p.color;
+      ctx.shadowBlur = 12;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += p.gravity || .02;
+      p.vx *= .986;
+      p.vy *= .986;
+      p.life -= p.decay;
+    }
+
+    requestAnimationFrame(drawEffects);
+  }
+
+  drawEffects();
+
+  function triggerAlert(name, avatarUrl, force = false) {
+    const now = Date.now();
+
+    if (!force && now - lastTrigger < 1800) return;
+    lastTrigger = now;
+
+    // Kullanıcı adını olay verisinden al; KINGOM'a sabitleme.
+    usernameEl.textContent = String(name || "ABONE").slice(0, 45);
+
+    avatarEl.onerror = () => {
+      avatarEl.onerror = null;
+      avatarEl.src = fallbackAvatar;
+    };
+
+    avatarEl.src =
+      typeof avatarUrl === "string" &&
+      /^https?:\/\//i.test(avatarUrl)
+        ? avatarUrl
+        : fallbackAvatar;
+
+    clearTimeout(hideTimer);
+
+    alertBox.classList.remove("show", "hide");
+    void alertBox.offsetWidth;
+    alertBox.classList.add("show");
+
+    burst();
+
+    setTimeout(() => {
+      makeBolt(
+        innerWidth * .07,
+        innerHeight * .30,
+        innerWidth * .42,
+        innerHeight * .62
+      );
+    }, 350);
+
+    setTimeout(() => {
+      makeBolt(
+        innerWidth * .93,
+        innerHeight * .28,
+        innerWidth * .58,
+        innerHeight * .60
+      );
+    }, 750);
+
+    hideTimer = setTimeout(() => {
+      alertBox.classList.remove("show");
+      alertBox.classList.add("hide");
+    }, 10000);
+  }
+
+  // Testte yazılan kullanıcı adı aynen gösterilir.
+  document.getElementById("testButton").addEventListener("click", () => {
+    const name =
+      document.getElementById("testName").value.trim() || "TestAbone";
+
+    triggerAlert(name, "", true);
+  });
+
+  /*
+    TikFinity mesaj alanları farklı sürümlerde değişebilir.
+    Aşağıdaki yardımcılar olası alan adlarını kontrol eder.
+  */
+  function findValue(objects, keys) {
+    for (const obj of objects) {
+      if (!obj || typeof obj !== "object") continue;
+
+      for (const key of keys) {
+        const value = obj[key];
+
+        if (typeof value === "string" && value.trim()) {
+          return value.trim();
+        }
+      }
+    }
+
+    return "";
+  }
+
+  function connectTikFinity() {
+    clearTimeout(reconnectTimer);
+
+    try {
+      socket = new WebSocket("ws://127.0.0.1:21213/");
+
+      socket.onopen = () => {
+        statusEl.textContent = "TikFinity bağlantısı kuruldu";
+        console.log("[Kingom] TikFinity bağlandı.");
+      };
+
+      socket.onmessage = event => {
+        let packet;
+
+        try {
+          packet = JSON.parse(event.data);
+        } catch {
+          console.warn("[Kingom] JSON olmayan mesaj:", event.data);
+          return;
+        }
+
+        console.log("[TikFinity olay verisi]", packet);
+
+        const data = packet.data || packet;
+        const user = data.userDetails || data.user || data.author || {};
+        const profile = data.profile || user.profile || {};
+
+        const objects = [data, user, profile, packet];
+
+        const eventName = findValue(
+          [packet, data],
+          ["event", "eventName", "eventType", "type", "command"]
+        ).toLowerCase().replace(/[^a-z0-9]/g, "");
+
+        // Abonelik olaylarını filtrele.
+        if (!/subscribe|subscription|subscriber/.test(eventName)) {
+          return;
+        }
+
+        const name = findValue(objects, [
+          "nickname",
+          "displayName",
+          "uniqueId",
+          "uniqueID",
+          "username",
+          "userName",
+          "user_id",
+          "handle"
+        ]);
+
+        const avatar = findValue(objects, [
+          "profilePictureUrl",
+          "profilePictureURL",
+          "avatarUrl",
+          "avatarURL",
+          "profilePicture",
+          "avatar",
+          "pictureUrl",
+          "picture"
+        ]);
+
+        if (!name) {
+          console.warn(
+            "[Kingom] Abonelik olayı geldi ama kullanıcı adı alanı bulunamadı.",
+            packet
+          );
+        }
+
+        triggerAlert(name || "ABONE", avatar);
+      };
+
+      socket.onerror = error => {
+        console.warn("[Kingom] WebSocket bağlantı hatası", error);
+        statusEl.textContent =
+          "Bağlantı hatası — TikFinity bağlantısını kontrol et";
+      };
+
+      socket.onclose = () => {
+        statusEl.textContent = "Yeniden bağlanıyor…";
+        reconnectTimer = setTimeout(connectTikFinity, 3000);
+      };
+
+    } catch (error) {
+      statusEl.textContent = "TikFinity bağlantısı bekleniyor…";
+      reconnectTimer = setTimeout(connectTikFinity, 3000);
+    }
+  }
+
+  connectTikFinity();
+
+  if (new URLSearchParams(location.search).get("test") === "1") {
+    setTimeout(() => {
+      triggerAlert("TestAbone", "", true);
+    }, 700);
+  }
+})();
+</script>
+</body>
+</html>
+```
