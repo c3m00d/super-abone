@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kingom Süper Abone — Köprü yükleniyor</title>
+<style>
+  html, body { margin: 0; width: 100%; height: 100%; background: transparent; color: #eafaff; font-family: Arial, sans-serif; }
+  #status { padding: 12px; font-size: 13px; }
+</style>
+</head>
+<body>
+<div id="status">Kingom animasyonu yükleniyor…</div>
+<script>
+(async function () {
+  const status = document.getElementById("status");
+  try {
+    // Bu dosyayı super-abone.html ile aynı GitHub Pages klasörüne yükle.
+    const overlayUrl = new URL("./super-abone.html", window.location.href);
+    const response = await fetch(overlayUrl.href, { cache: "no-store" });
+    if (!response.ok) throw new Error("super-abone.html yüklenemedi (HTTP " + response.status + ")");
+
+    let html = await response.text();
+    const scriptClose = html.toLowerCase().lastIndexOf("<" + "/script>");
+    const injectAt = html.lastIndexOf("})();", scriptClose);
+    if (scriptClose < 0 || injectAt < 0) {
+      throw new Error("Animasyon kodunda eklenecek konum bulunamadı.");
+    }
+
+    const bridgeCode = `
+  // Kingom yerel köprü: TikFinity webhook olaylarını sabit animasyona aktarır.
+  let __kingomBridgeSeq = 0;
+
+  async function __kingomBridgePoll() {
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:21214/poll?since=" + encodeURIComponent(__kingomBridgeSeq),
+        { cache: "no-store", mode: "cors" }
+      );
+      if (!response.ok) return;
+
+      const payload = await response.json();
+      if (!Array.isArray(payload.events)) return;
+
+      for (const item of payload.events) {
+        const itemId = Number(item.id) || 0;
+        if (itemId <= __kingomBridgeSeq) continue;
+        __kingomBridgeSeq = itemId;
+
+        const alertName = String(item.nickname || item.username || item.name || "SÜPER HAYRAN");
+        triggerAlert(alertName, item.avatar || "", false);
+      }
+    } catch (error) {
+      // Köprü hazır değilse sonraki kontrolde otomatik yeniden dener.
+    }
+  }
+
+  async function __kingomBridgeStart() {
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:21214/poll",
+        { cache: "no-store", mode: "cors" }
+      );
+      if (response.ok) {
+        const payload = await response.json();
+        __kingomBridgeSeq = Number(payload.latest_id) || 0;
+      }
+    } catch (error) {}
+
+    setInterval(__kingomBridgePoll, 750);
+  }
+
+  __kingomBridgeStart();
+`;
+
+    html = html.slice(0, injectAt) + bridgeCode + "\n  " + html.slice(injectAt);
+    document.open();
+    document.write(html);
+    document.close();
+  } catch (error) {
+    status.textContent = "Kingom bağlantısı kurulamadı: " + (error && error.message ? error.message : String(error));
+    console.error("[Kingom] Overlay yükleme hatası:", error);
+  }
+})();
+</script>
+</body>
+</html>
