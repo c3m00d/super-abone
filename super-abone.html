@@ -1033,7 +1033,7 @@ body.live-mode #status {
         ).toLowerCase().replace(/[^a-z0-9]/g, "");
 
         // Abonelik olaylarını filtrele.
-        if (!/subscribe|subscription|subscriber/.test(eventName)) {
+        if (!/subscribe|subscription|subscriber|superfan/.test(eventName)) {
           return;
         }
 
